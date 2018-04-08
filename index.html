@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>IIIOIIOIIO - cuentagotas</title>
+<style>
+html, body, img { border: none; margin: 0; padding: 0; line-height: 0; }
+select { }
+img { width: 25%; image-rendering: pixelated; image-rendering: -moz-crisp-edges; image-rendering: crisp-edges; }
+.controls { position: absolute; top: 0; left: 0; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const root = document.getElementById('root');
+
+const Select = (props) => {
+  const select = document.createElement('select');
+  props.options.forEach(val => {
+    const option = document.createElement('option');
+    option.value = val;
+    option.innerHTML = val;
+    select.appendChild(option);
+  });
+  select.value = props.value;
+  select.addEventListener('change', props.onChange);
+  return select;
+};
+
+const Controls = (props) => {
+  const controls = document.createElement('div');
+  controls.className = 'controls';
+  controls.appendChild(Select({
+    name: 'event',
+    value: props.id,
+    options: ['cronon.uno', 'untitled'],
+    onChange: e => render({ ...props, id: e.target.value }),
+  }));
+  controls.appendChild(Select({
+    name: 'resolution',
+    value: props.resolution,
+    options: ['10', '50', '100', '300', '600'],
+    onChange: e => render({ ...props, resolution: e.target.value }),
+  }));
+  return controls;
+};
+
+const Grid = ({ id, resolution }) => {
+  const container = document.createElement('div');
+  for (let i = 0; i < 16; i++) {
+    let child = document.createElement('img');
+    child.src = `img/${id}-${resolution}x${resolution}/${i}.gif`;
+    container.appendChild(child);
+  }
+  return container;
+};
+
+const render = props => {
+  const container = document.createElement('div');
+  container.appendChild(Controls(props));
+  container.appendChild(Grid(props));
+
+  root.innerHTML = '';
+  root.appendChild(container);
+
+  window.history.pushState(props, props.id, `#${props.id}-${props.resolution}`);
+};
+
+window.addEventListener('popstate', e => render({ ...intialState, ...e.state }));
+
+const [id, resolution] = window.location.hash.slice(1).split('-');
+
+render({
+  id: id || 'cronon.uno',
+  resolution: resolution || '50',
+});
+</script>
+</body>
+</html>

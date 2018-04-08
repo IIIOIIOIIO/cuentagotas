@@ -1,0 +1,12 @@
+{
+  "name": "cuentagotas",
+  "version": "1.0.0",
+  "bin": {
+    "create-gif": "./bin/cli.js"
+  },
+  "dependencies": {
+    "async": "^2.1.2",
+    "gm": "^1.23.0",
+    "minimist": "^1.2.0"
+  }
+}
